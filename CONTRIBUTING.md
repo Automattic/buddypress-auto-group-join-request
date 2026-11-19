@@ -13,18 +13,18 @@ This project follows the [Automattic Code of Conduct](https://automattic.com/cod
 - [Node.js](https://nodejs.org/) LTS or later
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Composer](https://getcomposer.org/)
-- [wp-env](https://www.npmjs.com/package/@wordpress/env), installed globally: `npm install -g @wordpress/env`
 
 ### Setup
 
-1. Clone the repository, keeping the default `buddypress-auto-group-join-request` directory name. The integration test scripts look for the plugin under that name inside wp-env.
+1. Clone the repository.
 2. Install dependencies:
    ```bash
    composer install
+   npm ci
    ```
 3. Start the WordPress environment:
    ```bash
-   wp-env start
+   npx wp-env start
    ```
 4. Visit http://localhost:8888 and log in with `admin` / `password`.
 
