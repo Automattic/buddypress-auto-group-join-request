@@ -1,6 +1,7 @@
 {
   "plugins": [
-    "."
+    ".",
+    "https://downloads.wordpress.org/plugin/buddypress.zip"
   ],
   "phpVersion": "8.2",
   "config": {

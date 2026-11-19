@@ -25,10 +25,25 @@ if ( empty( $_tests_dir ) ) {
 // Get access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
 
+// BuddyPress only turns on its core components by default; the plugin needs groups and profile fields.
+tests_add_filter(
+	'bp_active_components',
+	static function ( $components ) {
+		return array_merge(
+			(array) $components,
+			array(
+				'groups'   => 1,
+				'xprofile' => 1,
+			)
+		);
+	}
+);
+
 tests_add_filter(
 	'muplugins_loaded',
 	static function () {
-		// Load the plugin.
+		// wp-env installs BuddyPress alongside this plugin (see .wp-env.json).
+		require WP_PLUGIN_DIR . '/buddypress/bp-loader.php';
 		require dirname( __DIR__, 2 ) . '/buddypress-auto-group-join-request.php';
 	}
 );
@@ -38,6 +53,14 @@ WPIntegration\check_composer_autoload_exists();
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
+
+/*
+ * The WordPress test installer drops every table, BuddyPress's included, and
+ * recreates only core's, so create BuddyPress's tables for the active components.
+ */
+require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+require_once buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php';
+bp_core_install();
 
 /*
  * Register the custom autoloader to overload the PHPUnit MockObject classes when running on PHP 8.
