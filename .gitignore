@@ -5,8 +5,9 @@
 # Composer
 /composer.lock
 
-# Tests
+# Tests (.phpunit.result.cache is PHPUnit 9's; 10 and later use .phpunit.cache/)
 /.phpunit.cache/
+/.phpunit.result.cache
 
 # Local config overrides
 /.phpcs.xml
