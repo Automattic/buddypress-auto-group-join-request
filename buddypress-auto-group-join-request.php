@@ -134,7 +134,12 @@ function bp_auto_group_join_maybe_request( $user_id ) {
 		}
 
 		// Send the membership request.
-		$request_id = groups_send_membership_request( $user_id, $group->id );
+		$request_id = groups_send_membership_request(
+			array(
+				'user_id'  => $user_id,
+				'group_id' => $group->id,
+			)
+		);
 		if ( ! $request_id ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( sprintf( 'BP Auto Group Join: Failed to send membership request for user %d to group %d', $user_id, $group->id ) );
