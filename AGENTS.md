@@ -8,7 +8,7 @@ Automatically processes BuddyPress group join requests.
 |----------|-------|
 | **Main file** | `buddypress-auto-group-join-request.php` |
 | **Text domain** | `buddypress-auto-group-join-request` |
-| **Namespace** | `Automattic\BuddyPressAutoGroupJoinRequest` (tests only) |
+| **Namespace** | `Automattic\BuddyPressAutoGroupJoinRequest` |
 | **Source directory** | Root level (single-file plugin) |
 | **Version** | 1.0.0 |
 | **Requires PHP** | 8.2+ |
@@ -44,12 +44,9 @@ composer coverage          # Run tests with HTML coverage report
 
 ## Conventions
 
-Follow the standards documented in `~/code/plugin-standards/` for full details. Key points:
-
-- **Commits**: Use the `/commit` skill. Favour explaining "why" over "what".
-- **PRs**: Use the `/pr` skill. Squash and merge by default.
-- **Branch naming**: `feature/description`, `fix/description` from `develop`.
-- **Testing**: Write integration tests for WordPress-dependent behaviour, unit tests for isolated logic. Use `Yoast\WPTestUtils\WPIntegration\TestCase` for integration, `Yoast\WPTestUtils\BrainMonkey\YoastTestCase` for unit.
+- **Commits**: Every commit must be signed; `develop` and `main` reject unsigned commits. Use a [Conventional Commits](https://www.conventionalcommits.org/) prefix (`fix:`, `feat:`, `test:`, `docs:`, `ci:`, `chore:` and so on) with an imperative subject of about 50 characters, and a body that explains why the change was needed rather than what changed. One concern per commit.
+- **PRs**: Branch from `develop` and open the PR against it. The title describes the outcome in sentence case, without a conventional commit prefix. The description explains the problem first, then how the PR solves it. PRs are merged with a merge commit, so every commit message reaches `develop` as written.
+- **Testing**: Write integration tests for WordPress-dependent behavior, unit tests for isolated logic. Integration tests extend `Tests\Integration\TestCase` (built on `Yoast\WPTestUtils\WPIntegration\TestCase`); unit tests extend `Tests\Unit\TestCase` (built on `Yoast\WPTestUtils\BrainMonkey\TestCase`).
 - **Code style**: WordPress coding standards via PHPCS. Tabs for indentation.
 - **i18n**: All user-facing strings must use the `buddypress-auto-group-join-request` text domain.
 
@@ -57,7 +54,7 @@ Follow the standards documented in `~/code/plugin-standards/` for full details. 
 
 - **Single-file plugin**: All plugin logic lives in the main PHP file at the root. This is intentional given the plugin's small scope — do not split into multiple classes unless complexity genuinely warrants it.
 - **BuddyPress dependency**: The plugin hooks into BuddyPress group join workflows. It assumes BuddyPress is active and does not provide fallback behaviour without it.
-- **Tier 3 plugin**: Currently needs modernisation work (see PLUGIN_AUDIT.md). Improvements are welcome but should be incremental.
+- **Incremental modernization**: The plugin needs modernization work. Improvements are welcome but should be incremental.
 
 ## Common Pitfalls
 
