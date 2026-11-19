@@ -58,13 +58,24 @@ function bp_auto_group_join_get_config() {
 	// Ensure each config has required keys.
 	foreach ( $config as $key => $item ) {
 		if ( ! isset( $item['profile_field_name'], $item['profile_field_value'], $item['group_id'] ) ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( sprintf( 'BP Auto Group Join: Invalid configuration for key %s. Missing required fields.', $key ) );
+			bp_auto_group_join_log( sprintf( 'Invalid configuration for key %s. Missing required fields.', $key ) );
 			unset( $config[ $key ] );
 		}
 	}
 
 	return $config;
+}
+
+/**
+ * Write a message to the PHP error log when WP_DEBUG is on.
+ *
+ * @param string $message Message to log.
+ */
+function bp_auto_group_join_log( $message ) {
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( 'BP Auto Group Join: ' . $message );
+	}
 }
 
 // Hook into various profile update scenarios.
@@ -81,55 +92,47 @@ add_action( 'user_register', __NAMESPACE__ . '\\bp_auto_group_join_maybe_request
  */
 function bp_auto_group_join_maybe_request( $user_id ) {
 	if ( ! function_exists( 'groups_send_membership_request' ) || ! function_exists( 'groups_get_group' ) ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		error_log( 'BP Auto Group Join: BuddyBoss/BuddyPress not loaded' );
+		bp_auto_group_join_log( 'BuddyBoss/BuddyPress not loaded' );
 		return;
 	}
 
 	$configs = bp_auto_group_join_get_config();
 	if ( empty( $configs ) ) {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		error_log( 'BP Auto Group Join: No configurations found' );
+		bp_auto_group_join_log( 'No configurations found' );
 		return;
 	}
 
 	foreach ( $configs as $key => $config ) {
 		$field_id = xprofile_get_field_id_from_name( $config['profile_field_name'] );
 		if ( ! $field_id ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( sprintf( 'BP Auto Group Join: Field "%s" not found', $config['profile_field_name'] ) );
+			bp_auto_group_join_log( sprintf( 'Field "%s" not found', $config['profile_field_name'] ) );
 			continue;
 		}
 
 		$field_value = xprofile_get_field_data( $field_id, $user_id );
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		error_log( sprintf( 'BP Auto Group Join: Field value for user %d: %s (expected: %s)', $user_id, $field_value, $config['profile_field_value'] ) );
+		bp_auto_group_join_log( sprintf( 'Field value for user %d: %s (expected: %s)', $user_id, $field_value, $config['profile_field_value'] ) );
 		
 		if ( $field_value != $config['profile_field_value'] ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( sprintf( 'BP Auto Group Join: Field value %s does not match required value %s', $field_value, $config['profile_field_value'] ) );
+			bp_auto_group_join_log( sprintf( 'Field value %s does not match required value %s', $field_value, $config['profile_field_value'] ) );
 			continue;
 		}
 
 		$group = groups_get_group( $config['group_id'] );
 		if ( empty( $group ) || empty( $group->id ) ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( sprintf( 'BP Auto Group Join: Group with ID %d not found', $config['group_id'] ) );
+			bp_auto_group_join_log( sprintf( 'Group with ID %d not found', $config['group_id'] ) );
 			continue;
 		}
 
 		// Check if already a member or request pending.
 		if ( groups_is_user_member( $user_id, $group->id ) ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( sprintf( 'BP Auto Group Join: User %d is already a member of group %d', $user_id, $group->id ) );
+			bp_auto_group_join_log( sprintf( 'User %d is already a member of group %d', $user_id, $group->id ) );
 			continue;
 		}
 
 		// Check for existing membership request using the proper method.
 		$request = groups_check_for_membership_request( $user_id, $group->id );
 		if ( $request ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( sprintf( 'BP Auto Group Join: User %d already has a pending request for group %d', $user_id, $group->id ) );
+			bp_auto_group_join_log( sprintf( 'User %d already has a pending request for group %d', $user_id, $group->id ) );
 			continue;
 		}
 
@@ -141,8 +144,7 @@ function bp_auto_group_join_maybe_request( $user_id ) {
 			)
 		);
 		if ( ! $request_id ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( sprintf( 'BP Auto Group Join: Failed to send membership request for user %d to group %d', $user_id, $group->id ) );
+			bp_auto_group_join_log( sprintf( 'Failed to send membership request for user %d to group %d', $user_id, $group->id ) );
 		}
 	}
 }
