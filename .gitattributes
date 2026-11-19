@@ -10,6 +10,7 @@
 /.gitattributes   export-ignore
 /.gitignore       export-ignore
 /.phpcs.xml.dist  export-ignore
+/AGENTS.md        export-ignore
 /CHANGELOG.md     export-ignore
 /CONTRIBUTING.md  export-ignore
 /composer.json    export-ignore
