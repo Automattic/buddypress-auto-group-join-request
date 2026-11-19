@@ -33,7 +33,7 @@ jobs:
 
     strategy:
       matrix:
-        php: ['8.2', 'latest', '8.5']
+        php: ['8.2', '8.5']
       fail-fast: false
 
     steps:
