@@ -12,6 +12,7 @@
  * Description:       Automatically sends join requests to BuddyPress groups based on any profile field value.
  * Version:           1.0.0
  * Requires at least: 6.6
+ * Tested up to:      7.1
  * Requires PHP:      8.2
  * Author:            WordPress VIP
  * Text Domain:       buddypress-auto-group-join-request
