@@ -63,6 +63,13 @@ require_once buddypress()->plugin_dir . 'bp-core/admin/bp-core-admin-schema.php'
 bp_core_install();
 
 /*
+ * BuddyPress adds its emails' unsubscribe salt when it installs the emails, which
+ * bp_core_install() doesn't do. Without it, notifying a group admin of a join request
+ * passes null to hash_hmac(), which is deprecated.
+ */
+bp_update_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
+
+/*
  * Register the custom autoloader to overload the PHPUnit MockObject classes when running on PHP 8.
  *
  * This function has to be called _last_, after the WP test bootstrap to make sure it registers
