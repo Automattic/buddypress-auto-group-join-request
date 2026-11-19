@@ -26,7 +26,7 @@ The plugin integrates with BuddyPress/BuddyBoss's profile fields and group manag
 * Configurable profile-field-to-group mapping
 * Handles multiple group configurations
 * Prevents duplicate requests
-* Logs all actions for troubleshooting
+* Logs each decision for troubleshooting when `WP_DEBUG` is on
 
 ## Installation
 
@@ -108,9 +108,9 @@ $config['daves'] = array(
 
 ## Troubleshooting
 
-The plugin logs all actions to the WordPress error log. If something isn't working as expected:
+When `WP_DEBUG` is on, the plugin logs each decision it makes to the PHP error log. If something isn't working as expected:
 
-1. Check your WordPress error log
+1. Turn on `WP_DEBUG` and check the error log
 2. Verify the profile field name matches exactly
 3. Confirm the profile field value is correct
 4. Ensure the group ID exists
