@@ -3,6 +3,7 @@
     ".",
     "https://downloads.wordpress.org/plugin/buddypress.zip"
   ],
+  "core": "WordPress/WordPress#master",
   "phpVersion": "8.2",
   "config": {
     "WP_DEBUG": true,
@@ -15,7 +16,7 @@
   "env": {
     "tests": {
       "phpVersion": "8.4",
-      "core": "WordPress/WordPress#trunk"
+      "core": "WordPress/WordPress#master"
     }
   }
 }
